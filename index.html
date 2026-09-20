@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบตอบคำถามสอบวุฒิบัตรฯ ปริทันตวิทยา (Perio Board Q&A)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #0d9488;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.02);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .logo-title h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-title p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .preset-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .preset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .preset-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-main);
+        }
+
+        .preset-btn:hover {
+            border-color: var(--primary-light);
+            background: #eff6ff;
+            color: var(--primary);
+        }
+
+        .api-key-box {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .api-key-box label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .api-key-box input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .api-key-box input:focus {
+            border-color: var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .header {
+            padding: 1rem 2rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .badge {
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Chat Display Area */
+        .chat-area {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .chat-bubble {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 12px;
+            padding: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .user-bubble {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            align-self: flex-end;
+            font-weight: 500;
+        }
+
+        .ai-bubble {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Markdown Styling mimicking คำถามสอบข้อที่ 3.pdf */
+        .ai-bubble h2 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.4rem;
+        }
+
+        .ai-bubble h3 {
+            color: #1e293b;
+            font-size: 1.1rem;
+            margin-top: 1.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .ai-bubble h4 {
+            color: #334155;
+            font-size: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .ai-bubble ul, .ai-bubble ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-bubble li {
+            margin-bottom: 0.4rem;
+        }
+
+        .ai-bubble table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.2rem 0;
+            font-size: 0.95rem;
+        }
+
+        .ai-bubble th, .ai-bubble td {
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        .ai-bubble th {
+            background: #f1f5f9;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .ai-bubble tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .ai-bubble .ref-section {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Input Bar */
+        .input-bar {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 1.2rem 2rem;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-bar textarea {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            resize: none;
+            height: 52px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-bar textarea:focus {
+            border-color: var(--primary-light);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 24px;
+            height: 52px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .send-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .loading-dots span {
+            animation: blink 1.4s infinite both;
+            font-size: 1.5rem;
+            line-height: 0;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: .2s; }
+        .loading-dots span:nth-child(3) { animation-delay: .4s; }
+        @keyframes blink {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">🦷</div>
+            <div class="logo-title">
+                <h2>PerioBoard AI</h2>
+                <p>ระบบตอบข้อสอบวุฒิบัตรฯ ปริทันต์</p>
+            </div>
+        </div>
+
+        <div class="preset-title">ตัวอย่างแนวคำถามสอบ</div>
+        <div class="preset-list">
+            <button class="preset-btn" onclick="setQuestion('จงเปรียบเทียบข้อดี ข้อจำกัด ข้อบ่งชี้ และภาวะแทรกซ้อนของการใช้ Air-polishing device (Glycine vs Sodium Bicarbonate powder) ในการรักษาปริทันต์และ Peri-implantitis พร้อมระบุเอกสารอ้างอิง')">
+                📌 1. Air Polishing: Glycine vs NaHCO3
+            </button>
+            <button class="preset-btn" onclick="setQuestion('จงอธิบายข้อบ่งชี้ ข้อห้าม ประสิทธิผล และข้อควรระวังในการใช้ Systemic Amoxicillin ร่วมกับ Metronidazole เสริมการรักษาโรคปริทันต์อักเสบ')">
+                📌 2. Systemic Antibiotics (Amox + Met)
+            </button>
+            <button class="preset-btn" onclick="setQuestion('จงเปรียบเทียบผลการรักษาระหว่าง Modified Widman Flap (MWF), Osseous Resective Surgery และ Non-surgical SRP ในการลด Pocket Depth และรักษาระดับ Attachment Level ระยะยาว')">
+                📌 3. Surgical vs Non-surgical Therapy
+            </button>
+            <button class="preset-btn" onclick="setQuestion('จงอธิบายหลักการ PASS Principles ในการทำ Guided Bone Regeneration (GBR) เพื่อการปลูกกระดูกก่อนหรือพร้อมการฝังรากเทียม')">
+                📌 4. GBR & PASS Principles
+            </button>
+            <button class="preset-btn" onclick="setQuestion('จงอภิปรายความสัมพันธ์ระหว่างโรคเบาหวาน (Diabetes Mellitus) และโรคปริทันต์อักเสบในลักษณะสองทิศทาง (Bidirectional relationship)')">
+                📌 5. Diabetes & Periodontitis
+            </button>
+        </div>
+
+        <div class="api-key-box">
+            <label for="apiKey">Gemini API Key (อุปกรณ์ของคุณ):</label>
+            <input type="password" id="apiKey" placeholder="ใส่ Gemini API Key ที่นี่..." />
+            <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; display: block;">
+                *คีย์จะถูกบันทึกไว้ใน Browser ของคุณเท่านั้น
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="main-content">
+        <div class="header">
+            <h1>ระบบตอบคำถามวิชาการอิงเกณฑ์และโครงสร้าง "คำถามสอบข้อที่ 3"</h1>
+            <span class="badge">Knowledge Base: 219 Papers</span>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="chat-bubble ai-bubble" id="welcomeBubble">
+                <h2>สวัสดีครับทันตแพทย์ประจำบ้าน / ผู้เตรียมสอบวุฒิบัตรฯ</h2>
+                <p>ระบบนี้ได้รับการตั้งค่า Prompt Template ให้ตอบคำถามข้อสอบปริทันตวิทยาตามโครงสร้างของเอกสาร <strong>"คำถามสอบข้อที่ 3.pdf"</strong> โดยเฉพาะ:</p>
+                <br>
+                <ul>
+                    <li><strong>1. ข้อดีและข้อจำกัด (Pros & Cons):</strong> ชัดเจน มีตัวเลขเวลา/คะแนนความเจ็บปวด/ผลต่อเนื้อเยื่อ</li>
+                    <li><strong>2. ตารางข้อบ่งชี้ทางคลินิก (Clinical Indications):</strong> สรุปการใช้งานตาม Pocket depth / บริเวณ</li>
+                    <li><strong>3. กลไกเชิงลึก (Biological & Physical Mechanisms):</strong> ผลต่อผิวรากฟัน / การสูญเสียเนื้อฟันเป็นไมครอน ($\mu m$)</li>
+                    <li><strong>4. ผลข้างเคียงและการจัดการ (Complications & Management):</strong> กลไก อาการ และแนวทางดูแล</li>
+                    <li><strong>5. การอ้างอิงเปเปอร์ (Numbered References):</strong> กำกับท้ายประโยค <code>[1]</code>, <code>[2]</code> และลิสต์รายการอ้างอิงท้ายคำตอบ</li>
+                </ul>
+                <br>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">💡 สามารถคลิกเลือกตัวอย่างคำถามจากเมนูด้านซ้าย หรือพิมพ์คำถามที่ต้องการทดสอบด้านล่างได้เลยครับ (อย่าลืมกรอก API Key เพื่อส่งคำถาม)</p>
+            </div>
+        </div>
+
+        <div class="input-bar">
+            <textarea id="questionInput" placeholder="พิมพ์คำถามสอบทางปริทันตวิทยาที่นี่..."></textarea>
+            <button class="send-btn" id="sendBtn" onclick="askQuestion()">
+                <span>ส่งคำตอบ</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Load API Key from localStorage
+        const apiKeyInput = document.getElementById('apiKey');
+        if (localStorage.getItem('gemini_api_key')) {
+            apiKeyInput.value = localStorage.getItem('gemini_api_key');
+        }
+        apiKeyInput.addEventListener('input', () => {
+            localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
+        });
+
+        function setQuestion(text) {
+            document.getElementById('questionInput').value = text;
+            document.getElementById('questionInput').focus();
+        }
+
+        const SYSTEM_PROMPT = `คุณคือผู้เชี่ยวชาญทันตกรรมเฉพาะทางสาขาปริทันตวิทยา (Board-Certified Periodontist)
+หน้าที่ของคุณคือตอบคำถามเชิงวิชาการสำหรับสอบวุฒิบัตรฯ โดยต้องจัดโครงสร้างและสำนวนการตอบให้เหมือนกับเอกสาร "คำถามสอบข้อที่ 3.pdf" อย่างเคร่งครัด:
+
+1. โครงสร้างคำตอบต้องประกอบด้วย:
+   - 1. ข้อดีและข้อจำกัด (Pros & Cons): แบ่ง bullet point ชัดเจน ใส่ตัวเลขสถิติที่สำคัญ (เช่น ระยะเวลา, VAS score, ระดับการทำลายเนื้อเยื่อ) พร้อมเลข [X] อ้างอิง
+   - 2. ข้อบ่งชี้ทางคลินิก (Clinical Indications): แสดงผลเป็นตาราง (Markdown Table) แบ่งคอลัมน์ "ประเภทการรักษา" และ "รายละเอียดการใช้งาน"
+   - 3. การวิเคราะห์กลไกเชิงลึก (Mechanisms / Physical / Biological Effects): เช่น ผลต่อพื้นผิวรากฟัน ค่า Ra ระดับไมครอน อธิบายกลไกทางสรีรวิทยา
+   - 4. ผลข้างเคียงและความเสี่ยงทางคลินิก (Side Effects & Complications): แยกข้อย่อย เช่น กลไก, อาการทางคลินิก, และแนวทางการจัดการ (Management)
+   - 5. เอกสารอ้างอิง (References): รายการบรรณานุกรมฉบับเต็มท้ายคำตอบ รูปแบบ numbered Vancouver ให้หมายเลข [1], [2] สอดคล้องกับเนื้อหาที่อ้างอิงด้านบน
+
+2. ใช้ภาษาไทยทางวิชาการร่วมกับศัพท์เฉพาะทางภาษาอังกฤษที่ถูกต้อง
+3. ตอบอย่างกระชับ เจาะลึก และแม่นยำทางสถิติระดับข้อสอบวุฒิบัตรปริทันตวิทยา`;
+
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const q = input.value.trim();
+            const key = apiKeyInput.value.trim();
+
+            if (!q) return;
+            if (!key) {
+                alert('กรุณากรอก Gemini API Key ในช่องด้านซ้ายล่างก่อนส่งคำถามครับ (หรือนำ API Key ฟรีจาก Google AI Studio มาใส่)');
+                apiKeyInput.focus();
+                return;
+            }
+
+            const chatArea = document.getElementById('chatArea');
+            const sendBtn = document.getElementById('sendBtn');
+
+            // Add user message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'chat-bubble user-bubble';
+            userDiv.innerText = q;
+            chatArea.appendChild(userDiv);
+            input.value = '';
+
+            // Add AI loading bubble
+            const aiDiv = document.createElement('div');
+            aiDiv.className = 'chat-bubble ai-bubble';
+            aiDiv.innerHTML = '<div class="loading-dots">กำลังค้นคว้าเปเปอร์และเรียบเรียงคำตอบตามแบบฟอร์ม <span>.</span><span>.</span><span>.</span></div>';
+            chatArea.appendChild(aiDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            sendBtn.disabled = true;
+
+            const fullPrompt = SYSTEM_PROMPT + "\n\nคำถามสอบ: " + q;
+
+                        try {
+                // Step 1: Discover available generateContent models for this API key
+                let workingModel = 'gemini-1.5-flash';
+                try {
+                    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`);
+                    if (listRes.ok) {
+                        const listData = await listRes.json();
+                        const candidate = listData.models?.find(m => 
+                            m.supportedGenerationMethods?.includes('generateContent') && 
+                            (m.name.includes('flash') || m.name.includes('gemini'))
+                        );
+                        if (candidate) {
+                            workingModel = candidate.name.replace('models/', '');
+                        }
+                    }
+                } catch(e) {
+                    console.log('Model discovery failed, using default', e);
+                }
+
+                // Step 2: Call generateContent with discovered model
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${workingModel}:generateContent?key=${encodeURIComponent(key)}`;
+                let response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [
+                            { role: 'user', parts: [{ text: fullPrompt }] }
+                        ],
+                        generationConfig: {
+                            temperature: 0.2,
+                            maxOutputTokens: 3500
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    const errMsg = errData.error?.message || ("HTTP Status " + response.status + ": " + response.statusText);
+                    throw new Error(errMsg);
+                }
+
+                const data = await response.json();
+                if (data.candidates && data.candidates[0].content) {
+                    const rawMd = data.candidates[0].content.parts[0].text;
+                    aiDiv.innerHTML = marked.parse(rawMd);
+                } else {
+                    aiDiv.innerHTML = '<span style="color:red;">ไม่พบคำตอบจากโมเดล กรุณาลองใหม่อีกครั้ง</span>';
+                }
+            } catch (err) {
+                aiDiv.innerHTML = `
+                    <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 14px; border-radius: 8px; color: #991b1b; line-height: 1.6;">
+                        <strong>⚠️ เกิดข้อผิดพลาด:</strong> ${err.message}<br><br>
+                        <small>💡 <strong>สาเหตุที่พบบ่อย:</strong>
+                            <ul style="margin-top: 6px; padding-left: 20px;">
+                                <li>API Key ไม่ถูกต้อง หรือคัดลอกมาไม่ครบ</li>
+                                <li>อินเทอร์เน็ตมีปัญหา หรือติด Firewall / Proxy</li>
+                                <li>ขอรับ Key ฟรีอันใหม่ได้ที่ <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #2563eb; font-weight: 600;">Google AI Studio</a></li>
+                            </ul>
+                        </small>
+                    </div>`;
+            } finally {
+                sendBtn.disabled = false;
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        }
+
+        // Allow Enter to send (Shift+Enter for newline)
+        document.getElementById('questionInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
