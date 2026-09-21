@@ -9,42 +9,47 @@
     <style>
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
         body{background:#f8fafc;color:#1e293b;display:flex;height:100vh;overflow:hidden}
-        .sidebar{width:320px;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;padding:1.5rem;gap:1.2rem;overflow-y:auto}
-        .logo{display:flex;align-items:center;gap:12px}
-        .logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#1e3a8a,#0d9488);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem}
-        .logo h2{font-size:1.1rem;font-weight:700;color:#1e3a8a}
-        .logo p{font-size:0.8rem;color:#64748b}
-        .section-title{font-size:0.8rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
-        .preset-list{display:flex;flex-direction:column;gap:8px}
-        .preset-btn{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;text-align:left;font-size:0.88rem;cursor:pointer;transition:.2s;color:#1e293b;line-height:1.4}
+        .sidebar{width:320px;background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;padding:1.25rem;gap:1rem;overflow-y:auto}
+        .logo{display:flex;align-items:center;gap:10px}
+        .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#1e3a8a,#0d9488);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem}
+        .logo h2{font-size:1.05rem;font-weight:700;color:#1e3a8a}
+        .logo p{font-size:0.75rem;color:#64748b}
+        .section-title{font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+        select,input[type=password]{width:100%;padding:9px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;outline:none;background:#fff;color:#1e293b}
+        select:focus,input[type=password]:focus{border-color:#3b82f6}
+        .preset-btn{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;text-align:left;font-size:0.85rem;cursor:pointer;transition:.2s;color:#1e293b;line-height:1.4}
         .preset-btn:hover{border-color:#3b82f6;background:#eff6ff;color:#1e3a8a}
+        .tip{font-size:0.72rem;color:#94a3b8;margin-top:.25rem}
+        .link{color:#3b82f6;text-decoration:none;font-weight:600}
         .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-        .topbar{padding:1rem 1.8rem;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
-        .topbar h1{font-size:1.2rem;font-weight:700;color:#1e3a8a}
-        .badge{background:#ecfdf5;color:#059669;font-size:0.8rem;font-weight:600;padding:4px 12px;border-radius:20px;border:1px solid #a7f3d0}
-        .chat-area{flex:1;padding:1.8rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.5rem}
-        .bubble{max-width:900px;width:100%;margin:0 auto;border-radius:12px;padding:1.5rem;line-height:1.75}
+        .topbar{padding:.9rem 1.8rem;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+        .topbar h1{font-size:1.15rem;font-weight:700;color:#1e3a8a}
+        .badge{background:#ecfdf5;color:#059669;font-size:0.78rem;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid #a7f3d0}
+        .chat-area{flex:1;padding:1.8rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.4rem}
+        .bubble{max-width:900px;width:100%;margin:0 auto;border-radius:12px;padding:1.4rem;line-height:1.75}
         .user-bubble{background:#eff6ff;border:1px solid #bfdbfe;align-self:flex-end;font-weight:500}
         .ai-bubble{background:#fff;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
-        .ai-bubble h2{color:#1e3a8a;font-size:1.25rem;margin-bottom:.8rem;border-bottom:2px solid #1e3a8a;padding-bottom:.4rem}
-        .ai-bubble h3{color:#1e293b;font-size:1.1rem;margin-top:1.2rem;margin-bottom:.6rem}
-        .ai-bubble ul,.ai-bubble ol{padding-left:1.5rem;margin-bottom:.8rem}
-        .ai-bubble li{margin-bottom:.4rem}
-        .ai-bubble table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.92rem}
-        .ai-bubble th,.ai-bubble td{border:1px solid #e2e8f0;padding:10px 14px;text-align:left}
+        .ai-bubble h2{color:#1e3a8a;font-size:1.25rem;margin-bottom:.8rem;border-bottom:2px solid #1e3a8a;padding-bottom:.3rem}
+        .ai-bubble h3{color:#1e293b;font-size:1.05rem;margin-top:1.1rem;margin-bottom:.5rem}
+        .ai-bubble ul,.ai-bubble ol{padding-left:1.5rem;margin-bottom:.75rem}
+        .ai-bubble li{margin-bottom:.3rem}
+        .ai-bubble table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem}
+        .ai-bubble th,.ai-bubble td{border:1px solid #e2e8f0;padding:8px 12px;text-align:left}
         .ai-bubble th{background:#f1f5f9;color:#1e3a8a;font-weight:600}
         .ai-bubble tr:nth-child(even){background:#f8fafc}
-        .input-bar{background:#fff;border-top:1px solid #e2e8f0;padding:1.2rem 1.8rem;display:flex;gap:12px;align-items:center}
-        textarea{flex:1;padding:12px 16px;border:1px solid #e2e8f0;border-radius:10px;resize:none;height:52px;font-size:.95rem;outline:none;transition:.2s;font-family:'Sarabun',sans-serif}
+        .model-tag{float:right;font-size:.72rem;background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:10px;margin-bottom:6px}
+        .input-bar{background:#fff;border-top:1px solid #e2e8f0;padding:1rem 1.8rem;display:flex;gap:10px;align-items:center}
+        textarea{flex:1;padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;resize:none;height:50px;font-size:.92rem;outline:none;transition:.2s;font-family:'Sarabun',sans-serif}
         textarea:focus{border-color:#3b82f6}
-        .send-btn{background:#1e3a8a;color:#fff;border:none;border-radius:10px;padding:0 26px;height:52px;font-weight:700;font-size:1rem;cursor:pointer;transition:.2s;white-space:nowrap}
+        .send-btn{background:#1e3a8a;color:#fff;border:none;border-radius:10px;padding:0 24px;height:50px;font-weight:700;font-size:.95rem;cursor:pointer;transition:.2s;white-space:nowrap}
         .send-btn:hover{background:#3b82f6}
         .send-btn:disabled{background:#94a3b8;cursor:not-allowed}
-        .dots span{animation:blink 1.4s infinite both;font-size:1.5rem;line-height:0}
+        .dots span{animation:blink 1.4s infinite both;font-size:1.4rem;line-height:0}
         .dots span:nth-child(2){animation-delay:.2s}
         .dots span:nth-child(3){animation-delay:.4s}
         @keyframes blink{0%{opacity:.2}20%{opacity:1}100%{opacity:.2}}
-        .error-box{background:#fef2f2;border:1px solid #fecaca;padding:16px;border-radius:8px;color:#991b1b;line-height:1.6}
+        .error-box{background:#fef2f2;border:1px solid #fecaca;padding:14px;border-radius:8px;color:#991b1b;line-height:1.7}
+        .error-box ul{padding-left:1.2rem;margin-top:.5rem}
     </style>
 </head>
 <body>
@@ -58,50 +63,87 @@
     </div>
 
     <div>
-        <div class="section-title" style="margin-bottom:0.6rem;">📌 ตัวอย่างแนวคำถามสอบ</div>
-        <div class="preset-list">
-            <button class="preset-btn" onclick="setQ('จงเปรียบเทียบข้อดี ข้อจำกัด ข้อบ่งชี้ และภาวะแทรกซ้อนของการใช้ Air-polishing device (Glycine vs Sodium Bicarbonate powder) ในการรักษาปริทันต์และ Peri-implantitis พร้อมระบุเอกสารอ้างอิง')">📌 1. Air Polishing: Glycine vs NaHCO3</button>
-            <button class="preset-btn" onclick="setQ('จงอธิบายข้อบ่งชี้ ประสิทธิผล และข้อควรระวังในการใช้ Systemic Amoxicillin ร่วมกับ Metronidazole เสริมการรักษาโรคปริทันต์อักเสบ')">📌 2. Systemic Antibiotics (Amox + Met)</button>
-            <button class="preset-btn" onclick="setQ('จงเปรียบเทียบผลการรักษาระหว่าง Modified Widman Flap, Osseous Resective Surgery และ Non-surgical SRP ในการลด Pocket Depth และ Attachment Level ระยะยาว')">📌 3. Surgical vs Non-surgical Therapy</button>
-            <button class="preset-btn" onclick="setQ('จงอธิบายหลักการ PASS Principles ในการทำ Guided Bone Regeneration (GBR) เพื่อการปลูกกระดูกก่อนหรือพร้อมการฝังรากเทียม')">📌 4. GBR & PASS Principles</button>
-            <button class="preset-btn" onclick="setQ('จงอภิปรายความสัมพันธ์ระหว่างโรคเบาหวาน (Diabetes Mellitus) และโรคปริทันต์อักเสบในลักษณะสองทิศทาง')">📌 5. Diabetes & Periodontitis</button>
-        </div>
+        <div class="section-title">🔑 Gemini API Key</div>
+        <input type="password" id="apiKey" placeholder="ใส่ Gemini API Key ที่นี่...">
+        <p class="tip">รับคีย์ฟรีที่ <a class="link" href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a> (จำในเครื่องอัตโนมัติ)</p>
     </div>
 
-    <div style="margin-top:auto; padding-top:1rem; border-top:1px solid #e2e8f0; font-size:0.75rem; color:#94a3b8; line-height:1.5;">
-        🔒 <strong>ระบบปลอดภัย:</strong> เชื่อมต่อ AI ผ่าน Cloud Serverless Backend ไม่ต้องกรอก API Key เอง
+    <div>
+        <div class="section-title">🤖 เลือกโมเดล AI</div>
+        <select id="modelSelect">
+            <option value="gemini-3.6-flash">gemini-3.6-flash ⭐ (รุ่นแนะนำล่าสุด)</option>
+            <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+            <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
+            <option value="gemini-1.5-flash-002">gemini-1.5-flash-002</option>
+            <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+            <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
+        </select>
+        <p class="tip">หากตัวไหนขึ้น High Demand หรือใช้ไม่ได้ ให้กดสลับตัวอื่นได้ทันที</p>
+    </div>
+
+    <div>
+        <div class="section-title">📌 ตัวอย่างแนวคำถาม</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+            <button class="preset-btn" onclick="setQ('จงเปรียบเทียบข้อดี ข้อจำกัด ข้อบ่งชี้ และภาวะแทรกซ้อนของการใช้ Air-polishing device (Glycine vs Sodium Bicarbonate) ในการรักษาปริทันต์และ Peri-implantitis พร้อมระบุเอกสารอ้างอิง')">📌 Air Polishing: Glycine vs NaHCO3</button>
+            <button class="preset-btn" onclick="setQ('จงอธิบายข้อบ่งชี้ ประสิทธิผล และข้อควรระวังในการใช้ Systemic Amoxicillin ร่วมกับ Metronidazole เสริมการรักษาโรคปริทันต์อักเสบ')">📌 Systemic Antibiotics (Amox + Met)</button>
+            <button class="preset-btn" onclick="setQ('จงเปรียบเทียบผลการรักษาระหว่าง Modified Widman Flap, Osseous Resective Surgery และ Non-surgical SRP ในการลด Pocket Depth และ Attachment Level ระยะยาว')">📌 Surgical vs Non-surgical Therapy</button>
+            <button class="preset-btn" onclick="setQ('จงอธิบายหลักการ PASS Principles ในการทำ Guided Bone Regeneration (GBR) เพื่อการปลูกกระดูกก่อนหรือพร้อมการฝังรากเทียม')">📌 GBR & PASS Principles</button>
+            <button class="preset-btn" onclick="setQ('จงอภิปรายความสัมพันธ์ระหว่างโรคเบาหวาน (Diabetes Mellitus) และโรคปริทันต์อักเสบในลักษณะสองทิศทาง')">📌 Diabetes & Periodontitis</button>
+        </div>
     </div>
 </div>
 
 <div class="main">
     <div class="topbar">
-        <h1>ระบบตอบคำถามวิชาการ (พร้อมใช้ทันที ไม่ต้องใส่ Key)</h1>
+        <h1>ระบบตอบคำถามวุฒิบัตรฯ ปริทันตวิทยา</h1>
         <span class="badge">Knowledge Base: 219 Papers</span>
     </div>
 
     <div class="chat-area" id="chatArea">
         <div class="bubble ai-bubble">
             <h2>ยินดีต้อนรับสู่ PerioBoard AI</h2>
-            <p>ระบบนี้เปิดให้คุณและเพื่อนๆ เข้ามาพิมพ์ถามข้อสอบวุฒิบัตรฯ ได้ทันทีโดย<strong>ไม่ต้องขอหรือกรอก API Key ใดๆ ทั้งสิ้น</strong></p>
+            <p><strong>วิธีใช้งาน:</strong></p>
+            <ol style="padding-left:1.5rem; margin-top:.5rem; line-height:1.9">
+                <li>ใส่ <strong>API Key</strong> ในช่องซ้ายมือ (กรอกครั้งเดียว ระบบจะจำไว้ในเครื่อง)</li>
+                <li>เลือก <strong>โมเดล</strong> ที่ต้องการ (แนะนำ <code>gemini-3.6-flash</code> เป็นหลัก)</li>
+                <li>คลิกเลือกคำถามตัวอย่าง หรือพิมพ์คำถามที่ต้องการทดสอบ</li>
+            </ol>
             <br>
-            <p><strong>คำตอบจะถูกจัดโครงสร้างสมบูรณ์:</strong></p>
-            <ul style="margin-top:0.5rem;">
-                <li>1. ข้อดีและข้อจำกัด (Pros & Cons) พร้อมตัวเลขสถิติ</li>
-                <li>2. ตารางข้อบ่งชี้ทางคลินิก (Clinical Indications)</li>
-                <li>3. กลไกเชิงลึกและสรีรวิทยา (Biological & Physical Mechanisms)</li>
-                <li>4. ผลข้างเคียงและการจัดการ (Complications & Management)</li>
-                <li>5. เอกสารอ้างอิงฉบับเต็ม (References) กำกับท้ายคำตอบเสมอ</li>
-            </ul>
+            <p style="color:#64748b;font-size:0.88rem;">โครงสร้างคำตอบจะมี 5 ส่วน: Pros & Cons, ตาราง Indications, กลไก Biological Mechanisms, ภาวะแทรกซ้อน และมี <strong>เอกสารอ้างอิง (References) ฉบับเต็มท้ายคำตอบเสมอ</strong></p>
         </div>
     </div>
 
     <div class="input-bar">
-        <textarea id="qInput" placeholder="พิมพ์คำถามสอบปริทันตวิทยาที่นี่... (Enter เพื่อส่ง)"></textarea>
+        <textarea id="qInput" placeholder="พิมพ์คำถามสอบปริทันตวิทยาที่นี่... (Enter = ส่ง, Shift+Enter = ขึ้นบรรทัดใหม่)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="ask()">ส่งคำตอบ ➤</button>
     </div>
 </div>
 
 <script>
+const PROMPT = `คุณคือผู้เชี่ยวชาญทันตกรรมเฉพาะทางสาขาปริทันตวิทยา (Board-Certified Periodontist)
+หน้าที่ของคุณคือตอบข้อสอบวุฒิบัตรฯ อย่างครบถ้วนสมบูรณ์ ห้ามตัดจบกลางคันเด็ดขาด!
+
+โครงสร้างคำตอบต้องมีครบทั้ง 5 ส่วนเสมอ:
+1. ข้อดีและข้อจำกัด (Pros & Cons): มีตัวเลขสถิติ พร้อม [เลขอ้างอิง]
+2. ข้อบ่งชี้ทางคลินิก (Clinical Indications): แสดงผลเป็น Markdown Table
+3. กลไกเชิงลึก (Mechanisms & Biological Effects): อธิบายผลต่อเซลล์/เนื้อเยื่อ/พื้นผิวรากฟัน
+4. ผลข้างเคียงและความเสี่ยง (Side Effects & Complications): กลไก อาการ แนวทางจัดการ
+5. เอกสารอ้างอิง (References): [สำคัญที่สุด ห้ามลืมเด็ดขาด] ต้องเขียนรายการบรรณานุกรมฉบับเต็มท้ายคำตอบเสมอ รูปแบบ:
+   1. ชื่อผู้แต่ง. ชื่อบทความ. ชื่อวารสาร. ปี;เล่ม:หน้า.
+   (หมายเลข [1], [2] ในเนื้อหา ต้องตรงกับรายการบรรณานุกรมท้ายข้อความเสมอ)
+
+*หมายเหตุ: ให้บริหารความยาวเนื้อหาให้พอดี เพื่อให้แสดงผลหัวข้อที่ 5 (เอกสารอ้างอิง) ได้ครบถ้วนสมบูรณ์ก่อนจบข้อความ*`;
+
+const apiKeyEl = document.getElementById('apiKey');
+const modelEl = document.getElementById('modelSelect');
+
+// Load saved values
+if (localStorage.getItem('saved_gemini_key')) apiKeyEl.value = localStorage.getItem('saved_gemini_key');
+if (localStorage.getItem('saved_gemini_model')) modelEl.value = localStorage.getItem('saved_gemini_model');
+
+apiKeyEl.addEventListener('input', () => localStorage.setItem('saved_gemini_key', apiKeyEl.value.trim()));
+modelEl.addEventListener('change', () => localStorage.setItem('saved_gemini_model', modelEl.value));
+
 function setQ(text) {
     document.getElementById('qInput').value = text;
     document.getElementById('qInput').focus();
@@ -109,44 +151,72 @@ function setQ(text) {
 
 async function ask() {
     const q = document.getElementById('qInput').value.trim();
+    const key = apiKeyEl.value.trim();
+    const model = modelEl.value;
+
     if (!q) return;
+    if (!key) {
+        alert('กรุณาใส่ Gemini API Key ในช่องด้านซ้ายก่อนครับ');
+        apiKeyEl.focus();
+        return;
+    }
 
     const chatArea = document.getElementById('chatArea');
     const sendBtn = document.getElementById('sendBtn');
 
-    // User message
+    // Add user bubble
     const uDiv = document.createElement('div');
     uDiv.className = 'bubble user-bubble';
     uDiv.innerText = q;
     chatArea.appendChild(uDiv);
     document.getElementById('qInput').value = '';
 
-    // AI Loading
+    // Add AI loading bubble
     const aDiv = document.createElement('div');
     aDiv.className = 'bubble ai-bubble';
-    aDiv.innerHTML = '<div class="dots">กำลังค้นคว้าเปเปอร์และประมวลผลคำตอบ <span>.</span><span>.</span><span>.</span></div>';
+    aDiv.innerHTML = `<div class="dots">กำลังประมวลผลด้วยโมเดล <strong>${model}</strong> <span>.</span><span>.</span><span>.</span></div>`;
     chatArea.appendChild(aDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
     sendBtn.disabled = true;
 
+    const fullPrompt = PROMPT + '\\n\\nคำถามสอบ: ' + q;
+
     try {
-        const res = await fetch('/api/chat', {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+        const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: q })
+            body: JSON.stringify({
+                contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+                generationConfig: {
+                    temperature: 0.2,
+                    maxOutputTokens: 8192
+                }
+            })
         });
 
-        const data = await res.json();
         if (!res.ok) {
-            throw new Error(data.error || `HTTP ${res.status}`);
+            const errData = await res.json().catch(() => ({}));
+            const errMsg = errData.error?.message || `HTTP ${res.status}`;
+            throw new Error(errMsg);
         }
 
-        aDiv.innerHTML = marked.parse(data.answer);
+        const data = await res.json();
+        if (data.candidates?.[0]?.content) {
+            const md = data.candidates[0].content.parts[0].text;
+            aDiv.innerHTML = `<span class="model-tag">โมเดล: ${model}</span>` + marked.parse(md);
+        } else {
+            aDiv.innerHTML = '<span style="color:red;">ไม่พบคำตอบจากโมเดล</span>';
+        }
 
     } catch (err) {
         aDiv.innerHTML = `<div class="error-box">
-            <strong>⚠️ เกิดข้อผิดพลาด:</strong> ${err.message}<br>
-            <small style="color:#64748b;">กรุณาลองใหม่อีกครั้ง หรือตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</small>
+            <strong>⚠️ เกิดข้อผิดพลาด (โมเดล: ${model}):</strong><br>
+            <code style="font-size:.85rem;">${err.message}</code>
+            <ul>
+                <li>💡 <strong>วิธีแก้เร็วที่สุด:</strong> กดเปลี่ยนเป็นโมเดลอื่นในกล่อง <strong>"เลือกโมเดล AI"</strong> ด้านซ้าย แล้วกดส่งใหม่อีกครั้งครับ</li>
+                <li>ตรวจสอบว่าคีย์ในช่องด้านซ้ายถูกต้องครบถ้วน</li>
+            </ul>
         </div>`;
     } finally {
         sendBtn.disabled = false;
